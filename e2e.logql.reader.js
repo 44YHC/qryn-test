@@ -312,8 +312,8 @@ _it('should ws', async () => {
     for (let i = 0; i < 5; i++) {
         const points = createPoints(testID + '_ws', 1, wsStart + i * 1000, wsStart + i * 1000 + 1000, {}, {},
             () => `MSG_${i}`)
-        await sendPoints(`http://${clokiWriteUrl}`, points)
         await new Promise(resolve => setTimeout(resolve, 1000))
+        await sendPoints(`http://${clokiWriteUrl}`, points)
     }
     await new Promise(resolve => setTimeout(resolve, 2000))
     ws.off('message', wsListener)
