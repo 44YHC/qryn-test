@@ -174101,6 +174101,134 @@ exports[`ok limited res 1`] = `
 }
 `;
 
+exports[`otlp pprof: should read pyro SelectMergeProfile 1`] = `
+{
+  "app.encode": [
+    65,
+  ],
+  "app.handler": [
+    100,
+  ],
+  "app.parse": [
+    35,
+  ],
+  "main": [
+    125,
+  ],
+}
+`;
+
+exports[`otlp pprof: should read pyro SelectMergeStacktraces 1`] = `
+[
+  "+0x2a",
+  "app.encode",
+  "app.handler",
+  "app.parse",
+  "main",
+  "n/a",
+  "total",
+]
+`;
+
+exports[`otlp pprof: should read pyro SelectMergeStacktraces 2`] = `
+[
+  {
+    "total": {
+      "self": 0,
+      "total": 125,
+    },
+  },
+  {
+    "main": {
+      "self": 0,
+      "total": 125,
+    },
+  },
+  {
+    "+0x2a": {
+      "self": 25,
+      "total": 25,
+    },
+    "app.handler": {
+      "self": 0,
+      "total": 100,
+    },
+  },
+  {
+    "app.encode": {
+      "self": 65,
+      "total": 65,
+    },
+    "app.parse": {
+      "self": 35,
+      "total": 35,
+    },
+  },
+  {},
+]
+`;
+
+exports[`otlp pprof: should read pyro SelectSeries 1`] = `
+{
+  "[{"name":"__session_id__","value":"TEST_ID"},{"name":"five","value":"0"},{"name":"scope_label","value":"otlp"},{"name":"service_name","value":"otlp-test-client"}]": [
+    {
+      "timestamp": 0,
+      "value": 25,
+    },
+  ],
+  "[{"name":"__session_id__","value":"TEST_ID"},{"name":"five","value":"1"},{"name":"scope_label","value":"otlp"},{"name":"service_name","value":"otlp-test-client"}]": [
+    {
+      "timestamp": 20000,
+      "value": 25,
+    },
+  ],
+  "[{"name":"__session_id__","value":"TEST_ID"},{"name":"five","value":"2"},{"name":"scope_label","value":"otlp"},{"name":"service_name","value":"otlp-test-client"}]": [
+    {
+      "timestamp": 40000,
+      "value": 25,
+    },
+  ],
+  "[{"name":"__session_id__","value":"TEST_ID"},{"name":"five","value":"3"},{"name":"scope_label","value":"otlp"},{"name":"service_name","value":"otlp-test-client"}]": [
+    {
+      "timestamp": 60000,
+      "value": 25,
+    },
+  ],
+  "[{"name":"__session_id__","value":"TEST_ID"},{"name":"five","value":"4"},{"name":"scope_label","value":"otlp"},{"name":"service_name","value":"otlp-test-client"}]": [
+    {
+      "timestamp": 80000,
+      "value": 25,
+    },
+  ],
+}
+`;
+
+exports[`otlp pprof: should read pyro Series 1`] = `
+[
+  "[{"name":"__name__","value":"alloc_objects"},{"name":"__period_type__","value":"space"},{"name":"__period_unit__","value":"bytes"},{"name":"__profile_type__","value":"alloc_objects:alloc_objects:count:space:bytes"},{"name":"__sample_type__","value":"alloc_objects"},{"name":"__sample_unit__","value":"count"},{"name":"__session_id__","value":"TEST_ID"},{"name":"five","value":"0"},{"name":"scope_label","value":"otlp"},{"name":"service_name","value":"otlp-test-client"}]",
+  "[{"name":"__name__","value":"alloc_objects"},{"name":"__period_type__","value":"space"},{"name":"__period_unit__","value":"bytes"},{"name":"__profile_type__","value":"alloc_objects:alloc_objects:count:space:bytes"},{"name":"__sample_type__","value":"alloc_objects"},{"name":"__sample_unit__","value":"count"},{"name":"__session_id__","value":"TEST_ID"},{"name":"five","value":"1"},{"name":"scope_label","value":"otlp"},{"name":"service_name","value":"otlp-test-client"}]",
+  "[{"name":"__name__","value":"alloc_objects"},{"name":"__period_type__","value":"space"},{"name":"__period_unit__","value":"bytes"},{"name":"__profile_type__","value":"alloc_objects:alloc_objects:count:space:bytes"},{"name":"__sample_type__","value":"alloc_objects"},{"name":"__sample_unit__","value":"count"},{"name":"__session_id__","value":"TEST_ID"},{"name":"five","value":"2"},{"name":"scope_label","value":"otlp"},{"name":"service_name","value":"otlp-test-client"}]",
+  "[{"name":"__name__","value":"alloc_objects"},{"name":"__period_type__","value":"space"},{"name":"__period_unit__","value":"bytes"},{"name":"__profile_type__","value":"alloc_objects:alloc_objects:count:space:bytes"},{"name":"__sample_type__","value":"alloc_objects"},{"name":"__sample_unit__","value":"count"},{"name":"__session_id__","value":"TEST_ID"},{"name":"five","value":"3"},{"name":"scope_label","value":"otlp"},{"name":"service_name","value":"otlp-test-client"}]",
+  "[{"name":"__name__","value":"alloc_objects"},{"name":"__period_type__","value":"space"},{"name":"__period_unit__","value":"bytes"},{"name":"__profile_type__","value":"alloc_objects:alloc_objects:count:space:bytes"},{"name":"__sample_type__","value":"alloc_objects"},{"name":"__sample_unit__","value":"count"},{"name":"__session_id__","value":"TEST_ID"},{"name":"five","value":"4"},{"name":"scope_label","value":"otlp"},{"name":"service_name","value":"otlp-test-client"}]",
+  "[{"name":"__name__","value":"samples"},{"name":"__period_type__","value":"cpu"},{"name":"__period_unit__","value":"nanoseconds"},{"name":"__profile_type__","value":"samples:samples:count:cpu:nanoseconds"},{"name":"__sample_type__","value":"samples"},{"name":"__sample_unit__","value":"count"},{"name":"__session_id__","value":"TEST_ID"},{"name":"five","value":"0"},{"name":"scope_label","value":"otlp"},{"name":"service_name","value":"otlp-test-client"}]",
+  "[{"name":"__name__","value":"samples"},{"name":"__period_type__","value":"cpu"},{"name":"__period_unit__","value":"nanoseconds"},{"name":"__profile_type__","value":"samples:samples:count:cpu:nanoseconds"},{"name":"__sample_type__","value":"samples"},{"name":"__sample_unit__","value":"count"},{"name":"__session_id__","value":"TEST_ID"},{"name":"five","value":"1"},{"name":"scope_label","value":"otlp"},{"name":"service_name","value":"otlp-test-client"}]",
+  "[{"name":"__name__","value":"samples"},{"name":"__period_type__","value":"cpu"},{"name":"__period_unit__","value":"nanoseconds"},{"name":"__profile_type__","value":"samples:samples:count:cpu:nanoseconds"},{"name":"__sample_type__","value":"samples"},{"name":"__sample_unit__","value":"count"},{"name":"__session_id__","value":"TEST_ID"},{"name":"five","value":"2"},{"name":"scope_label","value":"otlp"},{"name":"service_name","value":"otlp-test-client"}]",
+  "[{"name":"__name__","value":"samples"},{"name":"__period_type__","value":"cpu"},{"name":"__period_unit__","value":"nanoseconds"},{"name":"__profile_type__","value":"samples:samples:count:cpu:nanoseconds"},{"name":"__sample_type__","value":"samples"},{"name":"__sample_unit__","value":"count"},{"name":"__session_id__","value":"TEST_ID"},{"name":"five","value":"3"},{"name":"scope_label","value":"otlp"},{"name":"service_name","value":"otlp-test-client"}]",
+  "[{"name":"__name__","value":"samples"},{"name":"__period_type__","value":"cpu"},{"name":"__period_unit__","value":"nanoseconds"},{"name":"__profile_type__","value":"samples:samples:count:cpu:nanoseconds"},{"name":"__sample_type__","value":"samples"},{"name":"__sample_unit__","value":"count"},{"name":"__session_id__","value":"TEST_ID"},{"name":"five","value":"4"},{"name":"scope_label","value":"otlp"},{"name":"service_name","value":"otlp-test-client"}]",
+]
+`;
+
+exports[`otlp pprof: should read the second profile type of each request 1`] = `
+[
+  "app.handler",
+  "app.parse",
+  "main",
+  "n/a",
+  "runtime.mallocgc",
+  "total",
+]
+`;
+
 exports[`pprof: should read pyro LabelValues with matchers 1`] = `
 [
   "1",

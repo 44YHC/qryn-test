@@ -28,6 +28,7 @@ require('./e2e.alert.config')
 require('./e2e.recording.rules')
 require('./e2e.traceql')
 require('./e2e.pprof')
+require('./e2e.otlp.pprof')
 
 const checkAlertConfig = async () => {
   try {
