@@ -174113,14 +174113,15 @@ exports[`otlp pprof: should read pyro SelectMergeProfile 1`] = `
     35,
   ],
   "main": [
-    125,
+    180,
   ],
 }
 `;
 
 exports[`otlp pprof: should read pyro SelectMergeStacktraces 1`] = `
 [
-  "+0x2a",
+  "/usr/bin/otlp-test-client+0x2a",
+  "/usr/lib/libtest-other.so+0x2a",
   "app.encode",
   "app.handler",
   "app.parse",
@@ -174135,19 +174136,23 @@ exports[`otlp pprof: should read pyro SelectMergeStacktraces 2`] = `
   {
     "total": {
       "self": 0,
-      "total": 125,
+      "total": 180,
     },
   },
   {
     "main": {
       "self": 0,
-      "total": 125,
+      "total": 180,
     },
   },
   {
-    "+0x2a": {
+    "/usr/bin/otlp-test-client+0x2a": {
       "self": 25,
       "total": 25,
+    },
+    "/usr/lib/libtest-other.so+0x2a": {
+      "self": 55,
+      "total": 55,
     },
     "app.handler": {
       "self": 0,
@@ -174173,31 +174178,31 @@ exports[`otlp pprof: should read pyro SelectSeries 1`] = `
   "[{"name":"__session_id__","value":"TEST_ID"},{"name":"five","value":"0"},{"name":"scope_label","value":"otlp"},{"name":"service_name","value":"otlp-test-client"}]": [
     {
       "timestamp": 0,
-      "value": 25,
+      "value": 36,
     },
   ],
   "[{"name":"__session_id__","value":"TEST_ID"},{"name":"five","value":"1"},{"name":"scope_label","value":"otlp"},{"name":"service_name","value":"otlp-test-client"}]": [
     {
       "timestamp": 20000,
-      "value": 25,
+      "value": 36,
     },
   ],
   "[{"name":"__session_id__","value":"TEST_ID"},{"name":"five","value":"2"},{"name":"scope_label","value":"otlp"},{"name":"service_name","value":"otlp-test-client"}]": [
     {
       "timestamp": 40000,
-      "value": 25,
+      "value": 36,
     },
   ],
   "[{"name":"__session_id__","value":"TEST_ID"},{"name":"five","value":"3"},{"name":"scope_label","value":"otlp"},{"name":"service_name","value":"otlp-test-client"}]": [
     {
       "timestamp": 60000,
-      "value": 25,
+      "value": 36,
     },
   ],
   "[{"name":"__session_id__","value":"TEST_ID"},{"name":"five","value":"4"},{"name":"scope_label","value":"otlp"},{"name":"service_name","value":"otlp-test-client"}]": [
     {
       "timestamp": 80000,
-      "value": 25,
+      "value": 36,
     },
   ],
 }

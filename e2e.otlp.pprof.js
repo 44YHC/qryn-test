@@ -51,15 +51,27 @@ const BUCKET_MS = 20000
  */
 const buildRequest = (i) => {
   const dict = new Dictionary()
-  dict.mapping('/usr/bin/otlp-test-client')
+  const clientMapping = dict.mapping('/usr/bin/otlp-test-client')
+  const libMapping = dict.mapping('/usr/lib/libtest-other.so')
 
   const parse = dict.stack(['app.parse', 'app.handler', 'main'])
   const encode = dict.stack(['app.encode', 'app.handler', 'main'])
   const malloc = dict.stack(['runtime.mallocgc', 'main'])
-  // A frame with no lines: gigapipe cannot symbolize it and falls back to a
-  // "+0x<address>" name. Exercised end to end so the fallback stays stable.
+  // Frames with no lines: gigapipe cannot symbolize these, so it names them
+  // after the binary the location's mapping points at, plus the address, as
+  // "<filename>+0x<address>".
+  //
+  // The two below sit at the SAME address in DIFFERENT binaries. That is the
+  // case a name built from the address alone gets wrong: it collapses both into
+  // one "+0x2a" node and sums their values, attributing one binary's time to
+  // the other. Keeping them as two distinct frames is the property under test,
+  // so assert both, not just one.
   const unsymbolized = dict.stackOfLocations([
-    dict.addressLocation(0x2a),
+    dict.addressLocation(0x2a, { mappingIndex: clientMapping }),
+    dict.location('main')
+  ])
+  const unsymbolizedOtherBinary = dict.stackOfLocations([
+    dict.addressLocation(0x2a, { mappingIndex: libMapping }),
     dict.location('main')
   ])
 
@@ -89,7 +101,8 @@ const buildRequest = (i) => {
         samples: [
           { stack: parse, values: [7] },
           { stack: encode, values: [13] },
-          { stack: unsymbolized, values: [5] }
+          { stack: unsymbolized, values: [5] },
+          { stack: unsymbolizedOtherBinary, values: [11] }
         ]
       }),
       profile(dict, {
