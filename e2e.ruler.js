@@ -24,10 +24,19 @@ const waitFor = async (fetch, predicate, {timeoutMs = 30000, intervalMs = 500} =
 const hasNamespace = (ns, expected) => (res) =>
     res.status === 200 && JSON.stringify(yaml.parse(res.data)[ns]) === JSON.stringify(expected)
 
+// promRule locates one rule of a group inside a Prometheus-format response.
+// The group is keyed by name and by file, which the ruler sets to the namespace.
+const promRule = (res, namespace, group) => {
+    if (res.status !== 200 || res.data.status !== 'success') return undefined
+    const g = (res.data.data.groups || [])
+        .find(g => g.name === group.name && g.file === namespace)
+    return g && g.rules.find(r => r.name === group.rules[0].record)
+}
+
 // registerCrud wires the full create/read/delete lifecycle for one rule set.
-// The Loki and Prometheus rule sets share the same controller semantics and
-// differ only in path prefix, expression language and the read endpoint that
-// renders rules in Prometheus wire format.
+// The rule sets share the same controller semantics and differ only in path
+// prefix, expression language and the read endpoint that renders rules in
+// Prometheus wire format.
 // allRulesYaml marks rule sets whose bare GET {base} returns every group as
 // YAML (the Loki AllRules endpoint). The Prometheus rule set has no such view:
 // its bare GET {base} is the Prometheus-format read endpoint instead.
@@ -75,10 +84,16 @@ const registerCrud = ({label, base, promBase, namespace, group, allRulesYaml}) =
 
     _it(`ruler ${label}: should expose rules in prometheus format`, async () => {
         if (!rulerEnabled()) return
-        const res = await axiosGet(`http://${clokiExtUrl}${promBase}`, {validateStatus: ok})
+        const res = await waitFor(
+            () => axiosGet(`http://${clokiExtUrl}${promBase}`, {validateStatus: ok}),
+            (r) => promRule(r, namespace, group))
         expect(res.status).toEqual(200)
         expect(res.data).toHaveProperty('status', 'success')
-        expect(res.data.data).toHaveProperty('groups')
+        expect(promRule(res, namespace, group)).toMatchObject({
+            type: 'recording',
+            query: group.rules[0].expr,
+            labels: group.rules[0].labels
+        })
     }, [`ruler ${label}: should create a rule group`])
 
     const readDeps = [
@@ -114,23 +129,37 @@ const registerCrud = ({label, base, promBase, namespace, group, allRulesYaml}) =
     }, [`ruler ${label}: should delete the rule group`])
 }
 
-// Loki rule set — LogQL recording rules, served under /loki/api/v1/rules
-// (and the equivalent /api/prom/rules). Its Prometheus-format view is the
-// /prometheus/api/v1/rules debug endpoint.
+const lokiGroup = (name) => ({
+    name,
+    interval: '10s',
+    rules: [{
+        record: 'job:log_lines:rate1m',
+        expr: 'sum(rate({job="test"}[1m]))',
+        labels: {e2e: 'true'}
+    }]
+})
+
+// Loki rule set — LogQL recording rules, served under /loki/api/v1/rules.
+// Its Prometheus-format view is the /prometheus/api/v1/rules debug endpoint.
 registerCrud({
     label: 'loki',
     base: '/loki/api/v1/rules',
     promBase: '/prometheus/api/v1/rules',
     allRulesYaml: true,
     namespace: 'ruler_e2e_loki',
-    group: {
-        name: 'loki_recording_group',
-        interval: '10s',
-        rules: [{
-            record: 'job:log_lines:rate1m',
-            expr: 'sum(rate({job="test"}[1m]))'
-        }]
-    }
+    group: lokiGroup('loki_recording_group')
+})
+
+// /api/prom/rules is Loki's own Prometheus-compatible ruler API, backed by the
+// same store as /loki/api/v1/rules and used interchangeably by Grafana's Loki
+// datasource. A separate namespace keeps it independent of the set above.
+registerCrud({
+    label: 'loki-compat',
+    base: '/api/prom/rules',
+    promBase: '/prometheus/api/v1/rules',
+    allRulesYaml: true,
+    namespace: 'ruler_e2e_loki_compat',
+    group: lokiGroup('loki_compat_recording_group')
 })
 
 // Prometheus rule set — PromQL recording rules, served under /api/v1/rules.
@@ -146,7 +175,8 @@ registerCrud({
         interval: '10s',
         rules: [{
             record: 'job:demo_metric:sum',
-            expr: 'sum(demo_metric)'
+            expr: 'sum(demo_metric)',
+            labels: {e2e: 'true'}
         }]
     }
 })
