@@ -82,8 +82,10 @@ class Dictionary {
   }
 
   /**
-   * An *unsymbolized* location: no lines, address only. gigapipe falls back to
-   * a "<buildid>+0x<addr>" frame name for these.
+   * An *unsymbolized* location: no lines, address only. gigapipe names these
+   * "<mapping filename>+0x<addr>", with "@<build id>" inserted when the mapping
+   * carries one. Pass opts.mappingIndex to choose the binary; it defaults to 0,
+   * which is the first mapping registered, not "no mapping".
    * @returns {number} location_table index
    */
   addressLocation (address, opts) {
