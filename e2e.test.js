@@ -25,9 +25,11 @@ require('./e2e.tempo.reader')
 require('./e2e.prom.reader')
 require('./e2e.misc')
 require('./e2e.alert.config')
+require('./e2e.recording.rules')
 require('./e2e.ruler')
 require('./e2e.traceql')
 require('./e2e.pprof')
+require('./e2e.otlp.pprof')
 
 const checkAlertConfig = async () => {
   try {
