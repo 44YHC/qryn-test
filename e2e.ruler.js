@@ -1,10 +1,10 @@
 const {_it, clokiExtUrl, axiosGet, axiosPost, axiosDelete, rulerEnabled} = require("./common");
 const yaml = require('yaml')
 
-// CRUD coverage for the recording-rules ruler API. The ruler is only mounted
-// when QRYN_RULER_ENABLED is set on the server; with it unset every endpoint
-// answers 404. The tests gate themselves on the matching client-side flag so
-// the suite is a no-op in the default (ruler-less) deployment.
+// CRUD coverage for the recording-rules ruler API. The ruler is mounted by
+// default; QRYN_RULER_ENABLED=0|false|no|off disables it on the server, and
+// every endpoint then answers 404. The tests gate themselves on the matching
+// client-side flag so the suite is a no-op in a ruler-less deployment.
 const ok = () => true
 
 // In a clustered deployment the ruler reads and writes the rules_dist

@@ -18,8 +18,8 @@ _it('should get /config', async () => {
 
 _it('should get /api/v1/rules', async () => {
     const res = await axiosGet(`http://${clokiExtUrl}/api/v1/rules`, {validateStatus: () => true})
-    // The ruler routes are only registered when QRYN_RULER_ENABLED is set;
-    // otherwise the endpoint is unknown and answers 404.
+    // The ruler routes are registered by default; when QRYN_RULER_ENABLED
+    // disables the ruler the endpoint is unknown and answers 404.
     expect(res.status).toEqual(rulerEnabled() ? 200 : 404)
 })
 

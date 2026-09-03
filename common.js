@@ -56,9 +56,10 @@ module.exports.sendPoints = async (endpoint, points) => {
 }
 const e2e = () => process.env.INTEGRATION_E2E || process.env.INTEGRATION
 
-// rulerEnabled mirrors the server's QRYN_RULER_ENABLED gate. When unset the
-// ruler routes are not registered and the API answers 404.
-const rulerEnabled = () => ['1', 'true', 'yes', 'on']
+// rulerEnabled mirrors the server's QRYN_RULER_ENABLED gate. The ruler is on
+// by default; only an explicit 0|false|no|off disables it, making the API
+// answer 404 on ruler routes.
+const rulerEnabled = () => !['0', 'false', 'no', 'off']
   .includes((process.env.QRYN_RULER_ENABLED || '').trim().toLowerCase())
 
 const clokiExtUrl = process.env.CLOKI_EXT_URL || 'localhost:3100'
